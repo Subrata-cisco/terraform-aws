@@ -22,6 +22,11 @@ variable "cidrblocksn2" {
   default = "10.0.2.0/24"
 }
 
+variable "cidrblocksn3" {
+  default = "10.0.3.0/24"
+}
+
+
 variable "az" {
   type = "map"
 
@@ -30,3 +35,10 @@ variable "az" {
     az2 = "us-west-2b"
   }
 }
+
+/*variable "aws_access_key" {
+  description = "AWS access key :"
+}
+variable "aws_secret_key" {
+  description = "AWS secret key :"
+}*/
