@@ -19,6 +19,7 @@ resource "aws_instance" "kms_compute_machine" {
     Name = "kmsresource"
   }
   subnet_id = "${aws_subnet.kms_public_subnet.id}"
+  security_groups = ["${aws_security_group.kms_app_server_sg.id}"]
   user_data = <<HEREDOC
   #!/bin/bash
   yum update -y
@@ -27,9 +28,9 @@ resource "aws_instance" "kms_compute_machine" {
   chkconfig httpd on
   echo "<?php" >> /var/www/html/index.php
   echo "\$conn = new mysqli('${aws_instance.kms_db_compute_machine.private_ip}', 'root', 'secret', 'test');" >> /var/www/html/index.php
-  echo "\$sql = 'SELECT * FROM mytable'; " >> /var/www/html/index.php
+  echo "\$sql = 'SELECT * FROM serviceinstance'; " >> /var/www/html/index.php
   echo "\$result = \$conn->query(\$sql); " >>  /var/www/html/index.php
-  echo "while(\$row = \$result->fetch_assoc()) { echo 'the value is: ' . \$row['mycol'] ;} " >> /var/www/html/index.php
+  echo "while(\$row = \$result->fetch_assoc()) { echo 'Service Instance name is :' . \$row['mycol'] ;} " >> /var/www/html/index.php
   echo "\$conn->close(); " >> /var/www/html/index.php
   echo "?>" >> /var/www/html/index.php
   HEREDOC
@@ -39,10 +40,9 @@ resource "aws_instance" "kms_db_compute_machine" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
   associate_public_ip_address = "false"
-  tags {
-    Name = "kmsprivateresource"
-  }
   subnet_id = "${aws_subnet.kms_private_subnet.id}"
+  security_groups = ["${aws_security_group.kms_db_server_sg.id}"]
+
   user_data = <<HEREDOC
   #!/bin/bash
   yum update -y
@@ -50,8 +50,8 @@ resource "aws_instance" "kms_db_compute_machine" {
   service mysqld start
   /usr/bin/mysqladmin -u root password 'secret'
   mysql -u root -psecret -e "create user 'root'@'%' identified by 'secret';" mysql
-  mysql -u root -psecret -e 'CREATE TABLE mytable (mycol varchar(255));' test
-  mysql -u root -psecret -e "INSERT INTO mytable (mycol) values ('kmsTenant1') ;" test
+  mysql -u root -psecret -e 'CREATE TABLE serviceinstance (mycol varchar(255));' test
+  mysql -u root -psecret -e "INSERT INTO serviceinstance (mycol) values ('kmsTenant1') ;" test
   HEREDOC
 }
 
@@ -61,11 +61,12 @@ resource "aws_elb" "kms_app_facing_loadbalancer" {
   load_balancer_type = "application"
   subnets = ["${aws_subnet.kms_public_subnet.id}","${aws_subnet.kms_public_subnet2.id}"]
   enable_deletion_protection = true
+  security_groups = ["${aws_security_group.kms_app_server_sg.id}"]
 
-  access_logs {
+  /*access_logs {
     bucket = "subsl"
     enabled = true
-  }
+  }*/
 
   "listener" {
     instance_port = 80

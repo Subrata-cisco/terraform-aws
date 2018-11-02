@@ -1,5 +1,5 @@
 output "kms_end_point" {
-  value = "${aws_lb.kms_app_facing_loadbalancer.dns_name}"
+  value = "${aws_elb.kms_app_facing_loadbalancer.dns_name}"
 }
 
 /*output "kms_aws_user_details" {
