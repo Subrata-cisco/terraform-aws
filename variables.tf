@@ -26,7 +26,6 @@ variable "cidrblocksn3" {
   default = "10.0.3.0/24"
 }
 
-
 variable "az" {
   type = "map"
 
@@ -36,9 +35,14 @@ variable "az" {
   }
 }
 
+variable "fromAnySourceCIDR" {
+  default = "0.0.0.0/0"
+}
+
 /*variable "aws_access_key" {
   description = "AWS access key :"
 }
 variable "aws_secret_key" {
   description = "AWS secret key :"
 }*/
+
