@@ -52,8 +52,6 @@ resource "aws_security_group" "kms_db_server_sg" {
 
 resource "aws_default_network_acl" "default" {
   default_network_acl_id = "${aws_vpc.kms_main_vpc.default_network_acl_id}"
-  #vpc_id     = "${aws_vpc.kms_main_vpc.id}"
-  #subnet_ids = ["${aws_subnet.kms_public_subnet.id}", "${aws_subnet.kms_public_subnet2.id}", "${aws_subnet.kms_private_subnet.id}"]
 
   # allow port 22
   ingress {
