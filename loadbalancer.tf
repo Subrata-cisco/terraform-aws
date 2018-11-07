@@ -1,7 +1,7 @@
 resource "aws_alb" "kms_app_facing_loadbalancer_new" {
   name            = "kms-front-end-alb"
   internal        = false
-  subnets         = ["${aws_subnet.kms_public_subnet.id}", "${aws_subnet.kms_public_subnet2.id}"]
+  subnets         = ["${aws_subnet.kms_public_subnet.id}", "${aws_subnet.kms_private_subnet.id}"]
   security_groups = ["${aws_security_group.kms_app_server_sg.id}"]
 }
 
@@ -11,7 +11,7 @@ resource "aws_alb_target_group" "kms_compute_tg" {
   vpc_id   = "${aws_vpc.kms_main_vpc.id}"
 
   health_check {
-    path                = "/index.html"
+    path                = "/index.php"
     port                = "80"
     protocol            = "HTTP"
     healthy_threshold   = 2
