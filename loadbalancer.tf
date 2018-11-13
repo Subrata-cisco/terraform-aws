@@ -11,7 +11,7 @@ resource "aws_alb_target_group" "kms_compute_tg" {
   vpc_id   = "${aws_vpc.kms_main_vpc.id}"
 
   health_check {
-    path                = "/index.php"
+    path                = "/index.html"
     port                = "80"
     protocol            = "HTTP"
     healthy_threshold   = 2

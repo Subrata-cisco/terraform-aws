@@ -10,6 +10,6 @@ output "kms_lb_dns_name" {
   value = "${aws_alb.kms_app_facing_loadbalancer_new.dns_name}"
 }
 
-output "kms_instance_ip" {
+output "kms_bastion_host_ip" {
   value = "${aws_instance.kms_bastion_host_jump_box.public_ip}"
 }
