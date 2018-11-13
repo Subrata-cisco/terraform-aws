@@ -11,5 +11,5 @@ output "kms_lb_dns_name" {
 }
 
 output "kms_instance_ip" {
-  value = "${aws_instance.kms_compute_machine.public_ip}"
+  value = "${aws_instance.kms_bastion_host_jump_box.public_ip}"
 }

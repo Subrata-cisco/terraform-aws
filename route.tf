@@ -9,10 +9,12 @@ resource "aws_vpc_dhcp_options_association" "kms_dns_resolver" {
 }
 
 resource "aws_route53_zone" "main" {
-  name    = "${var.dns_name_for_kms_db}"
+  name = "${var.dns_name_for_kms_db}"
+
   vpc {
     vpc_id = "${aws_vpc.kms_main_vpc.id}"
   }
+
   #vpc_id  = "${aws_vpc.kms_main_vpc.id}"
   comment = "Managed by terraform"
 }

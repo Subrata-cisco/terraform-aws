@@ -1,0 +1,22 @@
+terraform init
+terraform validate
+terraform fmt
+terraform state show <prop>.<subprop>
+terraform graph | dot -tsvg > graph.svg
+terraform workspace new newworkspace
+terraform output
+terraform import
+terraform force-unlock
+terraform refresh
+terraform taint/untaint  {for recreating the same resource again}
+
+terraform plan   (-var-file="starter.tfvars")
+terraform apply
+terraform destroy
+
+sudo service mysqld status
+mysql -u root -psecret
+
+sudo service httpd status
+cat /var/www/html/index.php
+cat /var/www/html/db.php

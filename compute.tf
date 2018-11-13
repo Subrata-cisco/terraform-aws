@@ -14,12 +14,32 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
+resource "aws_instance" "kms_bastion_host_jump_box" {
+  ami                         = "${var.amazon_linux_ami}"
+  instance_type               = "t2.micro"
+  associate_public_ip_address = "true"
+  key_name                    = "kms-key-pair"
+  depends_on                  = ["aws_nat_gateway.kms_nat_gateway"]
+
+  tags {
+    Name = "kms-bastion-host-jumpbox"
+  }
+
+  subnet_id       = "${aws_subnet.kms_public_subnet.id}"
+  security_groups = ["${aws_security_group.kms_app_server_sg.id}"]
+
+  user_data = <<HEREDOC
+  #!/bin/bash
+  sudo yum update -y
+  HEREDOC
+}
+
 resource "aws_instance" "kms_compute_machine" {
   ami                         = "${var.amazon_linux_ami}"
   instance_type               = "t2.micro"
   associate_public_ip_address = "false"
   key_name                    = "kms-key-pair"
-  depends_on = ["aws_nat_gateway.kms_nat_gateway"]
+  depends_on                  = ["aws_nat_gateway.kms_nat_gateway"]
 
   tags {
     Name = "kmscompute"
@@ -53,8 +73,8 @@ resource "aws_instance" "kms_db_compute_machine" {
   associate_public_ip_address = "false"
   subnet_id                   = "${aws_subnet.kms_private_subnet.id}"
   security_groups             = ["${aws_security_group.kms_db_server_sg.id}"]
-  key_name = "kms-key-pair"
-  depends_on = ["aws_nat_gateway.kms_nat_gateway"]
+  key_name                    = "kms-key-pair"
+  depends_on                  = ["aws_nat_gateway.kms_nat_gateway"]
 
   tags {
     Name = "kmsdb"
