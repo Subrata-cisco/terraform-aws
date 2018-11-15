@@ -20,3 +20,7 @@ mysql -u root -psecret
 sudo service httpd status
 cat /var/www/html/index.php
 cat /var/www/html/db.php
+
+aws iam list-users
+aws s3 ls
+aws ec2 describe-images --image-ids ami-a0cfeed8

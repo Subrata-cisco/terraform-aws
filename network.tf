@@ -10,6 +10,12 @@ resource "aws_subnet" "kms_private_subnet" {
   availability_zone = "${var.az["az1"]}"
 }
 
+resource "aws_subnet" "kms_db_cluster_private_subnet" {
+  cidr_block        = "${var.cidr_db_private}"
+  vpc_id            = "${aws_vpc.kms_main_vpc.id}"
+  availability_zone = "${var.az["az1"]}"
+}
+
 resource "aws_subnet" "kms_public_subnet" {
   cidr_block              = "${var.cidr_two}"
   vpc_id                  = "${aws_vpc.kms_main_vpc.id}"
@@ -17,12 +23,12 @@ resource "aws_subnet" "kms_public_subnet" {
   map_public_ip_on_launch = false
 }
 
-resource "aws_subnet" "kms_public_subnet2" {
+/*resource "aws_subnet" "kms_public_subnet2" {
   cidr_block              = "${var.cidr_three}"
   vpc_id                  = "${aws_vpc.kms_main_vpc.id}"
   availability_zone       = "${var.az["az2"]}"
   map_public_ip_on_launch = false
-}
+}*/
 
 resource "aws_internet_gateway" "kms_internet_gateway" {
   vpc_id = "${aws_vpc.kms_main_vpc.id}"
@@ -64,4 +70,9 @@ resource "aws_route_table" "kms_private_route_table" {
 resource "aws_route_table_association" "kms_private_subnet_route_association" {
   route_table_id = "${aws_route_table.kms_private_route_table.id}"
   subnet_id      = "${aws_subnet.kms_private_subnet.id}"
+}
+
+resource "aws_route_table_association" "kms_db_cluster_private_subnet_route_association" {
+  route_table_id = "${aws_route_table.kms_private_route_table.id}"
+  subnet_id      = "${aws_subnet.kms_db_cluster_private_subnet.id}"
 }

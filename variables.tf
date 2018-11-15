@@ -18,12 +18,16 @@ variable "cidr_private" {
   default = "10.0.1.0/24"
 }
 
-variable "cidr_two" {
+variable "cidr_db_private" {
   default = "10.0.2.0/24"
 }
 
-variable "cidr_three" {
+variable "cidr_two" {
   default = "10.0.3.0/24"
+}
+
+variable "cidr_three" {
+  default = "10.0.4.0/24"
 }
 
 variable "az" {

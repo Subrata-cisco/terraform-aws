@@ -58,7 +58,7 @@ resource "aws_instance" "kms_compute_machine" {
 
   echo "<p>Welcome to Oracle Key Management Cloud Service.</p><p><a href='db.php'>See all Service Instance</a></p>" > /var/www/html/index.html
   echo "<?php" >> /var/www/html/db.php
-  echo "\$conn = new mysqli('db.kmsdbdns', 'root', 'secret', 'globalkms');" >> /var/www/html/db.php
+  echo "\$conn = new mysqli('db.kmsdbdns', 'root', 'secret', 'test');" >> /var/www/html/db.php
   echo "\$sql = 'SELECT * FROM serviceinstance'; " >> /var/www/html/db.php
   echo "\$result = \$conn->query(\$sql); " >>  /var/www/html/db.php
   echo "while(\$row = \$result->fetch_assoc()) { echo 'SI Name :' . \$row['siname'] ;} " >> /var/www/html/db.php
@@ -71,7 +71,7 @@ resource "aws_instance" "kms_db_compute_machine" {
   ami                         = "${var.amazon_linux_ami}"
   instance_type               = "t2.micro"
   associate_public_ip_address = "false"
-  subnet_id                   = "${aws_subnet.kms_private_subnet.id}"
+  subnet_id                   = "${aws_subnet.kms_db_cluster_private_subnet.id}"
   security_groups             = ["${aws_security_group.kms_db_server_sg.id}"]
   key_name                    = "kms-key-pair"
   depends_on                  = ["aws_nat_gateway.kms_nat_gateway"]
@@ -86,9 +86,9 @@ resource "aws_instance" "kms_db_compute_machine" {
   sudo yum install -y mysql55-server
   sudo service mysqld start
   sudo /usr/bin/mysqladmin -u root password 'secret'
-  mysql -u root -psecret -e "create user 'root'@'%' identified by 'secret';" globalkms
-  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON globalkms.* TO 'root'@'%' identified by 'secret';"
-  mysql -u root -psecret -e 'CREATE TABLE serviceinstance (siname varchar(255));' globalkms
-  mysql -u root -psecret -e "INSERT INTO serviceinstance (siname) values ('kmsSIForProductionAccountDB') ;" globalkms
+  mysql -u root -psecret -e "create user 'root'@'%' identified by 'secret';" test
+  mysql -u root -psecret -e "GRANT ALL PRIVILEGES ON test.* TO 'root'@'%' identified by 'secret';"
+  mysql -u root -psecret -e 'CREATE TABLE serviceinstance (siname varchar(255));' test
+  mysql -u root -psecret -e "INSERT INTO serviceinstance (siname) values ('kmsSIForProductionAccountDB') ;" test
   HEREDOC
 }
